@@ -97,6 +97,17 @@ class BeforeFilterTest < Test::Unit::TestCase
     assert_equal 'cool', body
   end
 
+  it "gives you access to params from routes" do
+    mock_app {
+      before { @foo = params['foo'] }
+      get('/:foo'){ @foo }
+    }
+
+    get '/bar'
+    assert ok?
+    assert_equal 'bar', body
+  end
+
   it "runs filters defined in superclasses" do
     base = Class.new(Sinatra::Base)
     base.before { @foo = 'hello from superclass' }
